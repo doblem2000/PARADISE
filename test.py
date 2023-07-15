@@ -159,7 +159,7 @@ for video in os.listdir(args.videos):
         t = int(start_frame)
         f.write(str(t))
 
-    print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    #print(torch.cuda.memory_summary(device=None, abbreviated=False))
     
     total_frames += num_frames
     total_time += end_time-start_time
