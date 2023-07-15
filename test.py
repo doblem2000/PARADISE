@@ -46,7 +46,7 @@ args = init_parameter()
 
 ### TODO: CODICE AGGIUNTO 
 # Here you should initialize your method
-WEIGHT_PATH = 'MobileNetV3_exp7_1000epoch_10fold_3segment_1frampersegment_batchsize32/fold_3_best_model.pth'
+WEIGHT_PATH = 'MobileNetV3_exp2_1500epoch_5fold_3segment_1frampersegment_32batchsize/fold_0_best_model.pth'
 MIN_DURATION = 7
 THRESHOLD = 0.5
 total_frames = 0
