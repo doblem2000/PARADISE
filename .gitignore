@@ -2,10 +2,3 @@ runs/*
 FRAMES_unopersecondo/*
 FRAMES_all/*
 FRAMES/*
-.gitignore
-results/
-GT/
-TEST_SET/
-__pycache__/
-trash.py
-MobileNetV2_exp1_200epoch_10fold_3segment_1frampersegment_64batchsize
