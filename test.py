@@ -9,6 +9,7 @@ from torchvision import transforms
 from models import build_MobileNetV3Small
 import time
 
+
 def init_parameter():   
     parser = argparse.ArgumentParser(description='Test')
     parser.add_argument("--videos", type=str, default='foo_videos/', help="Dataset folder")
@@ -127,7 +128,7 @@ for video in os.listdir(args.videos):
     with torch.no_grad():
       #model.eval()
       #output = model(frames_tensor)
-      #frame_predictions = torch.nn.functional.sigmoid(output)
+      #frame_predictions = torch.nn.Sigmoid(output)
       
 
       model.eval()
@@ -140,7 +141,7 @@ for video in os.listdir(args.videos):
           model.to('cuda')
         
         output2 = model(input_batch)
-        frames_predictions[id] = torch.nn.functional.sigmoid(output2) 
+        frames_predictions[id] = Storch.nn.Sigmoid(output2) 
         
         end_time = time.time()
     #   for (id,_) in enumerate(frames_old):
