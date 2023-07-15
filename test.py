@@ -46,7 +46,7 @@ args = init_parameter()
 
 ### TODO: CODICE AGGIUNTO 
 # Here you should initialize your method
-WEIGHT_PATH = 'MobileNetV3Small_exp1_400epoch_10fold_3segment_1framepersegment_32batchsize/fold_4_best_model.pth'
+WEIGHT_PATH = 'MobileNetV3_exp7_1000epoch_10fold_3segment_1frampersegment_batchsize32/fold_3_best_model.pth'
 MIN_DURATION = 7
 THRESHOLD = 0.5
 total_frames = 0
@@ -141,7 +141,7 @@ for video in os.listdir(args.videos):
           model.to('cuda')
         
         output2 = model(input_batch)
-        frames_predictions[id] = Storch.nn.Sigmoid(output2) 
+        frames_predictions[id] = torch.nn.Sigmoid(output2) 
         
         end_time = time.time()
     #   for (id,_) in enumerate(frames_old):
