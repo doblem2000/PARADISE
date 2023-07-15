@@ -6,6 +6,8 @@ from torch.nn import Linear,Sequential,Dropout
 import albumentations
 from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
+from models import build_MobileNetV3Small
+import time
 
 def init_parameter():   
     parser = argparse.ArgumentParser(description='Test')
@@ -43,18 +45,16 @@ args = init_parameter()
 
 ### TODO: CODICE AGGIUNTO 
 # Here you should initialize your method
-WEIGHT_PATH = 'MobileNetV2_exp3_1000epoch_10fold/fold_4_best_model.pth'
-MIN_DURATION = 5
+WEIGHT_PATH = 'MobileNetV3Small_exp1_400epoch_10fold_3segment_1framepersegment_32batchsize/fold_4_best_model.pth'
+MIN_DURATION = 7
 THRESHOLD = 0.5
+total_frames = 0
+total_time = 0
 
 ##### CREAZIONE DEL MODELLO #####
 ### TODO: caricare il modello scelto da noi !!!!!!!!!!!!!!!!!!!!!
-def build_MobileNet(num_outputs=1):
-  model = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v2', pretrained=True)
-  model.classifier = Sequential(Dropout(p=0.2, inplace=False),Linear(in_features=1280, out_features=num_outputs, bias=True))
-  return model
 
-model = build_MobileNet()
+model = build_MobileNetV3Small(num_outputs=1)
 model.load_state_dict(torch.load(WEIGHT_PATH))
 model = model.cuda() if torch.cuda.is_available() else model
 model.eval()
@@ -106,10 +106,11 @@ for video in os.listdir(args.videos):
           #
           frames_old = frames
           #
-          frames_tensor = ImglistOrdictToTensor.forward(frames)
-          frames_tensor = frames_tensor.cuda() if torch.cuda.is_available() else frames_tensor
+          #frames_tensor = ImglistOrdictToTensor.forward(frames)
+          #frames_tensor = frames_tensor.cuda() if torch.cuda.is_available() else frames_tensor
+          
           frames = []
-          print("frames_tensor.size()",frames_tensor.size())
+          #print("frames_tensor.size()",frames_tensor.size())
         ########################################################
 
 
@@ -124,19 +125,26 @@ for video in os.listdir(args.videos):
     # Here you should add your code for writing the results
     frames_predictions = {}
     with torch.no_grad():
-      model.eval()
-      frame_predictions = model(frames_tensor)
+      #model.eval()
+      #output = model(frames_tensor)
+      #frame_predictions = torch.nn.functional.sigmoid(output)
+      
 
+      model.eval()
       for (id,frame) in enumerate(frames_old):
-        #print(id,frame)
-        input_batch = transforms.functional.to_tensor(frame).unsqueeze(0) # create a mini-batch as expected by the model
+        start_time = time.time()
+        input_batch = transforms.functional.to_tensor(frame).unsqueeze(0) # create a mini-batch as expected by the model        
+
         if torch.cuda.is_available():
           input_batch = input_batch.to('cuda')
           model.to('cuda')
-        frames_predictions[id] = model(input_batch)
-
-      for (id,_) in enumerate(frames_old):
-        print(frame_predictions[id] ,frames_predictions[id])
+        
+        output2 = model(input_batch)
+        frames_predictions[id] = torch.nn.functional.sigmoid(output2) 
+        
+        end_time = time.time()
+    #   for (id,_) in enumerate(frames_old):
+    #     print(frame_predictions[id] ,frames_predictions[id])
         
       #print(type(frame_predictions))
       #print("frame_predictions: ",frame_predictions)
@@ -151,13 +159,21 @@ for video in os.listdir(args.videos):
         t = int(start_frame)
         f.write(str(t))
 
-    torch.cuda.memory_summary(device=None, abbreviated=False)
+    print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    
+    total_frames += num_frames
+    total_time += end_time-start_time
+    end_time = 0
+    start_time = 0
     num_frames = 0
     frames = []
     frames_tensor = None
     prediction = None
     ########################################################
     f.close()
+
+print("Total frames: ", total_frames)
+print("Total time: ", total_time)
 
 
 

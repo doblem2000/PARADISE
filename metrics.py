@@ -2,7 +2,10 @@ import os
 from striprtf.striprtf import rtf_to_text
 
 result_dir = './results'
-labels_dir = './GT/TEST_SET/1'
+labels_dir = './GT/TEST_SET/ALL'
+
+TOTAL_FRAMES = 79603
+TOTAL_TIME = 0.3236958980560303
 
 ####### LOADING PREDICTIONS #######
 predictions = {}
@@ -125,8 +128,13 @@ for k in true_positive_list:
   p = int(predictions[k])
   d[k] = abs(p-g)
 
-D = sum(d.values())/TP
-Dn = max(0,60-D)/60
+if TP == 0:
+  print('TP = 0, impossible to calculate Delay, because there are no true positives')
+  D = 0
+  Dn = 0
+else:
+  D = sum(d.values())/TP
+  Dn = max(0,60-D)/60
 
 # for k,v in delays.items():
 #   print(k + ' ' + str(v))
@@ -148,3 +156,6 @@ print('recall: ' + str(round(R, 3)))
 print()
 print('average delay: ' + str(round(D, 3)))
 print('normalized average delay: ' + str(round(Dn, 3)))
+
+PFR = 1/(TOTAL_TIME/TOTAL_FRAMES)
+print('PFR: ' + str(round(PFR, 3)))
