@@ -54,9 +54,9 @@ total_time = 0
 
 ##### CREAZIONE DEL MODELLO #####
 ### TODO: caricare il modello scelto da noi !!!!!!!!!!!!!!!!!!!!!
-
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = build_MobileNetV3Small(num_outputs=1)
-model.load_state_dict(torch.load(WEIGHT_PATH))
+model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 model = model.cuda() if torch.cuda.is_available() else model
 model.eval()
 ########### FINE CODICE NOSTRO AGGIUNTO
@@ -141,7 +141,7 @@ for video in os.listdir(args.videos):
           model.to('cuda')
         
         output2 = model(input_batch)
-        frames_predictions[id] = torch.nn.Sigmoid(output2) 
+        frames_predictions[id] = torch.nn.functional.sigmoid(output2) 
         
         end_time = time.time()
     #   for (id,_) in enumerate(frames_old):
