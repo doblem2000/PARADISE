@@ -46,7 +46,7 @@ args = init_parameter()
 
 ### TODO: CODICE AGGIUNTO 
 # Here you should initialize your method
-WEIGHT_PATH = 'MobileNetV3_exp2_1500epoch_5fold_3segment_1frampersegment_32batchsize/fold_0_best_model.pth'
+WEIGHT_PATH = 'MobileNetV3Small_exp3_1500epoch_5fold_3segment_1framepersegment_64batchsize/fold_0_best_model.pth'
 MIN_DURATION = 7
 THRESHOLD = 0.5
 total_frames = 0
@@ -141,7 +141,7 @@ for video in os.listdir(args.videos):
           model.to('cuda')
         
         output2 = model(input_batch)
-        frames_predictions[id] = torch.nn.Sigmoid(output2) 
+        frames_predictions[id] = torch.nn.functional.sigmoid(output2) 
         
         end_time = time.time()
     #   for (id,_) in enumerate(frames_old):
@@ -151,7 +151,7 @@ for video in os.listdir(args.videos):
       #print("frame_predictions: ",frame_predictions)
 
 
-    min_duration = MIN_DURATION if len(frames_predictions) >= MIN_DURATION else frame_predictions.size(0)
+    min_duration = MIN_DURATION if len(frames_predictions) >= MIN_DURATION else len(frames_predictions)
     prediction, start_frame = classify_video(frames_predictions, threshold=THRESHOLD, min_duration=min_duration)
     #min_duration = MIN_DURATION if frame_predictions.size(0) >= MIN_DURATION else frame_predictions.size(0)
     #prediction, start_frame = classify_video(frame_predictions, threshold=THRESHOLD, min_duration=min_duration)
