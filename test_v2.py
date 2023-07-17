@@ -26,7 +26,7 @@ args = init_parameter()
 
 ### TODO: # Here you should initialize your method
 WEIGHT_PATH = 'ResNet50_exp10_2000epoch_5fold_5segment_1frampersegment_batchsize32/fold_0_best_model.pth'
-MIN_DURATION = 10
+MIN_DURATION = 5
 THRESHOLD = 0.5
 
 
@@ -36,7 +36,7 @@ THRESHOLD = 0.5
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model = models.build_ResNet50(1)
+model = build_ResNet50(1)
 model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 #model = build_FireNet()
 
