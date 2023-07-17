@@ -436,8 +436,8 @@ def one_epoch(model, lossFunction, output_activation, optimizer, train_loader, v
 from torch.nn import Linear,Sequential,Dropout
 from models import *
 
-model = build_ResNet50(1)
-model=network_parameters_ResNet50(model)
+model = build_MobileNetV3Small(1)
+model=network_parameters_MobileNetV3Small(model)
 
 print(torchinfo.summary(model, ####################################################32 batch size da mettere a run time
         input_size=(32, 3, 224, 224), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
@@ -488,9 +488,9 @@ epochs = 1000
 early_stopping_patience = 40
 
 # create output directory and logger
-experiment_name = "ResNet50_exp11_1000epoch_5fold_3segment_1frampersegment_batchsize32"
+experiment_name = "MobileNetV3Small_exp12_1000epoch_5fold_3segment_1frampersegment_batchsize32"
 
-optimizer_config = torch.optim.SGD(model.fc.parameters(), lr=lr, weight_decay=lambda_reg, momentum=momentum)
+optimizer_config = optimizer_settings_MobileNetV3Small(model, lr, lambda_reg, momentum)
 
 dirs = os.listdir()
 
@@ -512,8 +512,8 @@ val_losses = torch.zeros(epochs, K_cross_val)
 val_accuracies = torch.zeros(epochs, K_cross_val)
 
 for k in range(K_cross_val):
-  model = build_ResNet50(1)
-  model=network_parameters_ResNet50(model)
+  model = build_MobileNetV3Small(1)
+  model = network_parameters_MobileNetV3Small(model)
   model.cuda()#.cpu() ######################################
   # dataloader, network, optimizer for each fold
   train_loader, val_loader = train_folds[k], val_folds[k]
