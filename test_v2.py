@@ -76,12 +76,20 @@ for video in os.listdir(args.videos):
                 
                 ##### PREPROCESSING IMAGES #####
                 #TODO: dai video si estraggono le immagini 
-                transform = albumentations.Compose([
-                    albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
+                #### Firenet
+                # transform = albumentations.Compose([
+                #     albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
+                #     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
+                #                             std=[0.229, 0.224, 0.225],
+                #                             max_pixel_value=255.,
+                #                             always_apply=True),
+                # ])
+                preprocessing = albumentations.Sequential([
+                    albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
                     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
-                                            std=[0.229, 0.224, 0.225],
-                                            max_pixel_value=255.,
-                                            always_apply=True),
+                                 std=[0.229, 0.224, 0.225],
+                                 max_pixel_value=255.,
+                                 always_apply=True),
                 ])
                 ################################
                 img = transform(image=img)["image"]
@@ -97,7 +105,7 @@ for video in os.listdir(args.videos):
                 
                 ###################### 
                 #prediction = FireNetV2.compute_output(output[0])
-                prediction= torch.nn.functional.sigmoid(output[0]) 
+                prediction = torch.nn.functional.sigmoid(output[0]) 
                 ######################
                
 
