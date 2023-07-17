@@ -92,7 +92,7 @@ for video in os.listdir(args.videos):
                                  always_apply=True),
                 ])
                 ################################
-                img = transform(image=img)["image"]
+                img = transforms(image=img)["image"]
                 
                 with torch.no_grad():
                     
