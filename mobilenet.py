@@ -488,7 +488,7 @@ epochs = 1000
 early_stopping_patience = 40
 
 # create output directory and logger
-experiment_name = "ResNet50_exp11_1000epoch_5fold_3segment_1frampersegment_batchsize32"
+experiment_name = "MobileNetV3Small_exp12_1000epoch_5fold_3segment_1frampersegment_batchsize32"
 
 optimizer_config = optimizer_settings_MobileNetV3Small(model, lr, lambda_reg, momentum)
 
