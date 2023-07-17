@@ -34,8 +34,10 @@ THRESHOLD = 0.5
 
 
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 model = build_ResNet50(1)
-model.load_state_dict(torch.load(WEIGHT_PATH))
+model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 #model = build_FireNet()
 
 
