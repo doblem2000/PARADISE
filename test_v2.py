@@ -84,7 +84,7 @@ for video in os.listdir(args.videos):
                 #                             max_pixel_value=255.,
                 #                             always_apply=True),
                 # ])
-                preprocessing = albumentations.Sequential([
+                transform = albumentations.Sequential([
                     albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
                     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225],
@@ -92,7 +92,7 @@ for video in os.listdir(args.videos):
                                  always_apply=True),
                 ])
                 ################################
-                img = transforms(image=img)["image"]
+                img = transform(image=img)["image"]
                 
                 with torch.no_grad():
                     
