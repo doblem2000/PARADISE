@@ -6,7 +6,7 @@ from torch.nn import Linear,Sequential,Dropout
 import albumentations
 from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
-from models import build_MobileNetV3Small
+from models import *
 import time
 
 
