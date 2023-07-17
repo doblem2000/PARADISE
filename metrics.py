@@ -4,8 +4,10 @@ from striprtf.striprtf import rtf_to_text
 result_dir = './results'
 labels_dir = './GT/TEST_SET/ALL'
 
-TOTAL_FRAMES = 79603
-TOTAL_TIME = 0.3236958980560303
+PFR_TARGET = 10
+MEM_TARGET = 4
+TOTAL_FRAMES = 612
+TOTAL_TIME = 0.07954859733581543
 
 ####### LOADING PREDICTIONS #######
 predictions = {}
@@ -71,7 +73,7 @@ if(len(predictions) != len(labels)):
       print(k)
 
 delta_t = 5
-TP = FP = FN = 0
+TN = TP = FP = FN = 0
 
 true_positive_list = []
 false_positive_list = []
@@ -108,6 +110,8 @@ for k,g in labels.items():
       FN = FN + 1
       false_negative_list.append(k)
 
+
+
 try:
   P = abs(TP)/(abs(TP)+abs(FP))
 except:
@@ -118,7 +122,17 @@ try:
 except:
   R = 0
 
+####### TRUE NEGATIVE #######
+for k,g in labels.items():
+  g=int(g)
+  if(g == -1):
+    p = int(predictions[k])
+    if p == -1:
+      TN = TN + 1
+      true_negative_list.append(k)
+
 TN = len(labels)-TP-FP-FN
+
 accuracy = (TP+TN)/len(labels)
 
 ####### DELAY #######
@@ -158,4 +172,6 @@ print('average delay: ' + str(round(D, 3)))
 print('normalized average delay: ' + str(round(Dn, 3)))
 
 PFR = 1/(TOTAL_TIME/TOTAL_FRAMES)
-print('PFR: ' + str(round(PFR, 3)))
+
+PFR_delta = max(0,PFR_TARGET/PFR - 1)
+print('PFR_delta: ' + str(round(PFR_delta, 3)))

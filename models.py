@@ -1,4 +1,5 @@
 import torch
+from firenetV2 import FireNetV2
 
 def build_MobileNetV3Small(num_outputs=1):
   model = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v3_small', pretrained=True)
@@ -18,3 +19,13 @@ def build_MobileNetV2(num_outputs=1):
   model.classifier = torch.nn.Sequential(torch.nn.Dropout(p=0.2, inplace=False),
                                          torch.nn.Linear(in_features=1280, out_features=num_outputs, bias=True))
   return model
+
+def build_FireNetV2():
+  model = FireNetV2()
+  return model
+    
+# from torchvision import models
+# from torchsummary import summary
+# model = build_MobileNetV3Small()
+# model.eval()
+# summary(model.cuda(), (3, 224, 224))
