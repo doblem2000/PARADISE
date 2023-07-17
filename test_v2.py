@@ -6,7 +6,7 @@ from torch.nn import Linear,Sequential,Dropout
 import albumentations
 from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
-from models import build_MobileNetV3Small, build_MobileNetV2, build_FireNetV2
+from models import *
 import time
 #from firenet import FireNet,build_FireNet
 #from firenetV2 import FireNetV2
@@ -36,7 +36,7 @@ THRESHOLD = 0.5
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model = build_ResNet50(1)
+model = models.build_ResNet50(1)
 model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 #model = build_FireNet()
 
@@ -99,7 +99,7 @@ for video in os.listdir(args.videos):
                 #prediction = FireNetV2.compute_output(output[0])
                 prediction= torch.nn.functional.sigmoid(output[0]) 
                 ######################
-                
+               
 
                 if prediction >= THRESHOLD: # Fire detected in the current frame
                     #print("prediction >= THRESHOLD: ", num_imgs)
