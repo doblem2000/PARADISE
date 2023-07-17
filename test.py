@@ -8,7 +8,8 @@ from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
 from models import *
 import time
-
+from firenet import FireNet,build_FireNet
+from firenetV2 import FireNetV2
 
 def init_parameter():   
     parser = argparse.ArgumentParser(description='Test')
@@ -54,9 +55,11 @@ total_time = 0
 
 ##### CREAZIONE DEL MODELLO #####
 ### TODO: caricare il modello scelto da noi !!!!!!!!!!!!!!!!!!!!!
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = build_MobileNetV3Small(num_outputs=1)
-model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
+
+model = build_FireNetV2()
+model.load_state_dict(torch.load(WEIGHT_PATH))
+#model = build_FireNet()
+
 model = model.cuda() if torch.cuda.is_available() else model
 model.eval()
 ########### FINE CODICE NOSTRO AGGIUNTO
@@ -90,7 +93,7 @@ for video in os.listdir(args.videos):
             ##### PREPROCESSING IMAGES #####
             #TODO: dai video si estraggono le immagini 
             transform = albumentations.Compose([
-                albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
+                albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
                 albumentations.Normalize(mean=[0.485, 0.456, 0.406],
                                         std=[0.229, 0.224, 0.225],
                                         max_pixel_value=255.,
@@ -128,7 +131,7 @@ for video in os.listdir(args.videos):
     with torch.no_grad():
       #model.eval()
       #output = model(frames_tensor)
-      #frame_predictions = torch.nn.Sigmoid(output)
+      #frame_predictions = torch.nn.functional.sigmoid(output)
       
 
       model.eval()
@@ -141,7 +144,8 @@ for video in os.listdir(args.videos):
           model.to('cuda')
         
         output2 = model(input_batch)
-        frames_predictions[id] = torch.nn.functional.sigmoid(output2) 
+        frames_predictions[id] = FireNetV2.compute_output(output2[0])
+        #frames_predictions[id] = torch.nn.functional.sigmoid(output2) 
         
         end_time = time.time()
     #   for (id,_) in enumerate(frames_old):

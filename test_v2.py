@@ -25,8 +25,8 @@ args = init_parameter()
 
 
 ### TODO: # Here you should initialize your method
-WEIGHT_PATH = 'ResNet50_exp10_2000epoch_5fold_5segment_1frampersegment_batchsize32/fold_0_best_model.pth'
-MIN_DURATION = 5
+WEIGHT_PATH = 'FireNetV2_600epoch_10fold_3segment_1frampersegment_batchsize32/fold_1_best_model.pth'
+MIN_DURATION = 10
 THRESHOLD = 0.5
 
 
@@ -35,8 +35,7 @@ THRESHOLD = 0.5
 
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-model = build_ResNet50(1)
+model = build_FireNetV2()
 model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 #model = build_FireNet()
 
@@ -77,20 +76,20 @@ for video in os.listdir(args.videos):
                 ##### PREPROCESSING IMAGES #####
                 #TODO: dai video si estraggono le immagini 
                 #### Firenet
-                # transform = albumentations.Compose([
-                #     albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
-                #     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
-                #                             std=[0.229, 0.224, 0.225],
-                #                             max_pixel_value=255.,
-                #                             always_apply=True),
-                # ])
-                transform = albumentations.Sequential([
-                    albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
+                transform = albumentations.Compose([
+                    albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
                     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225],
-                                 max_pixel_value=255.,
-                                 always_apply=True),
+                                            std=[0.229, 0.224, 0.225],
+                                            max_pixel_value=255.,
+                                            always_apply=True),
                 ])
+                # transform = albumentations.Sequential([
+                #     albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
+                #     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
+                #                  std=[0.229, 0.224, 0.225],
+                #                  max_pixel_value=255.,
+                #                  always_apply=True),
+                # ])
                 ################################
                 img = transform(image=img)["image"]
                 
@@ -104,8 +103,8 @@ for video in os.listdir(args.videos):
                     output = model(input_batch)
                 
                 ###################### 
-                #prediction = FireNetV2.compute_output(output[0])
-                prediction = torch.nn.functional.sigmoid(output[0]) 
+                prediction = FireNetV2.compute_output(output[0])
+                #prediction = torch.nn.functional.sigmoid(output[0]) 
                 ######################
                
 
