@@ -41,18 +41,21 @@ def network_parameters_ResNet50(model):
   for param in model.parameters():
     param.requires_grad = False
   model.fc.requires_grad_(True)
+  return model
 
 def network_parameters_MobileNetV2(model):
   for param in model.parameters():
     param.requires_grad = False
   for param in model.classifier.parameters():
     param.requires_grad = True
+  return model
 
 def network_parameters_MobileNetV3Small(model):
   for param in model.parameters():
     param.requires_grad = False
   for param in model.classifier.parameters():
     param.requires_grad = True
+  return model
 
 def optimizer_settings_ResNet50(model, lr, weight_decay, momentum):
   return torch.optim.SGD(model.fc.parameters(), lr=lr, weight_decay=weight_decay, momentum=momentum)

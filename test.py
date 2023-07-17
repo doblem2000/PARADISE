@@ -6,9 +6,9 @@ from torch.nn import Linear,Sequential,Dropout
 import albumentations
 from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
-from models import build_MobileNetV3Small, build_MobileNetV2, build_FireNetV2
+from models import *
 import time
-#from firenet import FireNet,build_FireNet
+from firenet import FireNet,build_FireNet
 from firenetV2 import FireNetV2
 
 def init_parameter():   
@@ -47,8 +47,8 @@ args = init_parameter()
 
 ### TODO: CODICE AGGIUNTO 
 # Here you should initialize your method
-WEIGHT_PATH = 'FireNetV2_200epoch_10fold_3segment_1frampersegment_batchsize32/fold_1_best_model.pth'
-MIN_DURATION = 10
+WEIGHT_PATH = 'ResNet50_exp10_2000epoch_5fold_5segment_1frampersegment_batchsize32/fold_0_best_model.pth'
+MIN_DURATION = 7
 THRESHOLD = 0.5
 total_frames = 0
 total_time = 0

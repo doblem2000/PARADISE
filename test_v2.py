@@ -6,10 +6,10 @@ from torch.nn import Linear,Sequential,Dropout
 import albumentations
 from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
-from models import build_MobileNetV3Small, build_MobileNetV2, build_FireNetV2
+from models import *
 import time
 #from firenet import FireNet,build_FireNet
-from firenetV2 import FireNetV2
+#from firenetV2 import FireNetV2
 
 
 ##### CODICE PROFESSORE #####
@@ -34,8 +34,9 @@ THRESHOLD = 0.5
 
 
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = build_FireNetV2()
-model.load_state_dict(torch.load(WEIGHT_PATH))
+model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 #model = build_FireNet()
 
 
@@ -74,6 +75,7 @@ for video in os.listdir(args.videos):
                 
                 ##### PREPROCESSING IMAGES #####
                 #TODO: dai video si estraggono le immagini 
+                #### Firenet
                 transform = albumentations.Compose([
                     albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
                     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
@@ -81,6 +83,13 @@ for video in os.listdir(args.videos):
                                             max_pixel_value=255.,
                                             always_apply=True),
                 ])
+                # transform = albumentations.Sequential([
+                #     albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
+                #     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
+                #                  std=[0.229, 0.224, 0.225],
+                #                  max_pixel_value=255.,
+                #                  always_apply=True),
+                # ])
                 ################################
                 img = transform(image=img)["image"]
                 
@@ -95,8 +104,9 @@ for video in os.listdir(args.videos):
                 
                 ###################### 
                 prediction = FireNetV2.compute_output(output[0])
+                #prediction = torch.nn.functional.sigmoid(output[0]) 
                 ######################
-                
+               
 
                 if prediction >= THRESHOLD: # Fire detected in the current frame
                     #print("prediction >= THRESHOLD: ", num_imgs)
