@@ -109,25 +109,25 @@ class FireNetV2(nn.Module):
         #     return output[1]
 
 
-model = FireNetV2().cuda()
+# model = FireNetV2().cuda()
 
-preprocess = transforms.Compose([
-    transforms.Resize([64,64]), # Fa la resize delle foto di Alexnet
-    #transforms.CenterCrop(224),  #Fa il crop delle immagini
-    transforms.ToTensor(), # Trasformo le immagini di AlexNet in tensori su cui posso lavorare
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-])
+# preprocess = transforms.Compose([
+#     transforms.Resize([64,64]), # Fa la resize delle foto di Alexnet
+#     #transforms.CenterCrop(224),  #Fa il crop delle immagini
+#     transforms.ToTensor(), # Trasformo le immagini di AlexNet in tensori su cui posso lavorare
+#     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+# ])
 
-input_image = Image.open("./00001.jpg")
-#display(input_image)
+# input_image = Image.open("./00001.jpg")
+# #display(input_image)
 
-input_tensor = preprocess(input_image)
-input_batch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
-#print(input_batch.shape)
-with torch.no_grad():
-  model.eval()
-  #model.forward(input_batch.cuda(), verbose=True)
-  o = model(input_batch.cuda())[0]
-  print(FireNetV2.compute_output(o))
-  #pred = output_activation(model(input_batch.cuda())).cpu().numpy().item()
-# #print(train_dataset.class_to_idx, "\nPrediction:", pred)
+# input_tensor = preprocess(input_image)
+# input_batch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
+# #print(input_batch.shape)
+# with torch.no_grad():
+#   model.eval()
+#   #model.forward(input_batch.cuda(), verbose=True)
+#   o = model(input_batch.cuda())[0]
+#   print(FireNetV2.compute_output(o))
+#   #pred = output_activation(model(input_batch.cuda())).cpu().numpy().item()
+# # #print(train_dataset.class_to_idx, "\nPrediction:", pred)

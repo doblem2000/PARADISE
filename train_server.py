@@ -147,51 +147,6 @@ print("\nLabel test set:")
 os.system('ls GT/TEST_SET/1 | wc -l ')
 os.system('ls GT/TEST_SET/0 | wc -l ')
 
-os.system('rm -R FRAMES ')
-
-videos_path1 = "TRAINING_SET"
-videos_path2 = "TEST_SET"
-frames_path = "FRAMES"
-
-import cv2, os, argparse, glob, PIL, tqdm
-
-def extract_frames(video):
-    # Process the video
-    ret = True # è True fino a che ci sono frame nel video.
-    cap = cv2.VideoCapture(video)
-    f = 0
-    while ret:
-        ret, img = cap.read() # I frame vengono presi dalla read function e questo viene salvato in img (un numpy array)
-        if ret:
-            f += 1
-            PIL.Image.fromarray(img).save(os.path.join(frames_path, video, "{:05d}.jpg".format(f))) # Con la PIL function salviamo l'array come immagine. Con il formato jpeg non sprechiamo troppo spazio ma perdiamo delle informazioni.
-    cap.release()
-
-#Con il codice sottostante prendiamo i path di tutti i video nelle directory. Poi salviamo tutti i frame nei frame_path che creiamo.
-
-# For all the videos
-file_list_training = [path for path in glob.glob(os.path.join(videos_path1,"**"), recursive=True) # glob.glob restituisce tutti i path di una directory. Ma noi siamo interessati solo ai file e quindi li prendiamo con os.path.isfile(path)
-             if os.path.isfile(path)]
-
-file_list_validation = [path for path in glob.glob(os.path.join(videos_path2,"**"), recursive=True) # glob.glob restituisce tutti i path di una directory. Ma noi siamo interessati solo ai file e quindi li prendiamo con os.path.isfile(path)
-             if os.path.isfile(path)]
-#print(file_list_training)
-#print(file_list_validation)
-
-for video in tqdm.tqdm(file_list_training): # Se ho già caricato i frame di questi video li skippo
-  if os.path.isdir(os.path.join(frames_path, video)):
-    continue
-  os.makedirs(os.path.join(frames_path, video))
-  #extract_frames(video) # Invece di chiamare la funzione di prima che è lenta utilizzo questa di sotto che è molto più veloce.
-  os.system("ffmpeg -i {} {}/{}/$Frame{}.jpg".format(video, frames_path, video, "%05d"))   # Senza -r estraggo tutti i frame del video, con -r estraggo un solo frame per secondo
-
-for video in tqdm.tqdm(file_list_validation): # Se ho già caricato i frame di questi video li skippo
-  #print(os.path.join(frames_path, video))
-  if os.path.isdir(os.path.join(frames_path, video)):
-    continue
-  os.makedirs(os.path.join(frames_path, video))
-  #extract_frames(video) # Invece di chiamare la funzione di prima che è lenta utilizzo questa di sotto che è molto più veloce.
-  os.system("ffmpeg -i {} {}/{}/$Frame{}.jpg".format(video, frames_path, video, "%05d"))
 
 videos_path = "TRAINING_SET"
 frames_path = "FRAMES"
@@ -227,6 +182,7 @@ for video in tqdm.tqdm(file_list): # Se ho già caricato i frame di questi video
   #extract_frames(video)    # Invece di chiamare la funzione di prima che è lenta utilizzo questa di sotto che è molto più veloce.
   #estre tutti i frame
   os.system("ffmpeg -i {} {}/{}/$Frame{}.jpg".format(video, frames_path, video, "%05d"))
+  
 
 os.system('pip install striprtf ')
 os.system('pip install torchinfo ')
@@ -665,8 +621,16 @@ def one_epoch(model, lossFunction, output_activation, optimizer, train_loader, v
 from torch.nn import Linear,Sequential,Dropout
 
 def build_MobileNet(num_outputs=1):
-  model = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v2', pretrained=True)
-  model.classifier = Sequential(Dropout(p=0.2, inplace=False),Linear(in_features=1280, out_features=num_outputs, bias=True))
+  model = torch.hub.load('pytorch/vision:v0.10.0', 'mobilenet_v3_small', pretrained=True)
+  model.classifier = Sequential(
+    torch.nn.Linear(in_features=576,
+                    out_features=1024, # same number of output units as our number of classes
+                    bias=True),
+    torch.nn.Hardswish(inplace=True),
+    torch.nn.Dropout(p=0.2, inplace=True),
+    torch.nn.Linear(in_features=1024,
+                    out_features=num_outputs, # same number of output units as our number of classes
+                    bias=True))
   return model
 
 model = build_MobileNet(1)
@@ -678,12 +642,13 @@ for param in model.classifier.parameters():
   param.requires_grad = True
 
 print(torchinfo.summary(model, ####################################################32 batch size da mettere a run time
-        input_size=(64, 3, 224, 224), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
+        input_size=(32, 3, 224, 224), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
         verbose=0,
         col_names=["input_size", "output_size", "num_params", "trainable"],
         col_width=20,
         row_settings=["var_names"]
 ))
+
 
 preprocessing = albumentations.Sequential([
         albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
@@ -709,7 +674,7 @@ dataset = VideoFrameDataset(root_path="FRAMES/TRAINING_SET/",
 
 # Creazione K fold e relativi dataloader
 K_cross_val = 10
-batch_size = 64
+batch_size = 32
 train_folds, val_folds, indexes = cross_val_dataloaders(dataset, dataset, K_cross_val, batch_size)
 
 # Define loss and optimizer
@@ -721,11 +686,11 @@ lr=0.001
 momentum = 0.9
 lambda_reg = 0
 
-epochs = 200
+epochs = 2000
 early_stopping_patience = 40
 
 # create output directory and logger
-experiment_name = "MobileNetV2_exp6_200epoch_10fold_5segment_1frampersegment_batchsize64"
+experiment_name = "MobileNetV3_exp9_2000epoch_10fold_5segment_1frampersegment_batchsize32"
 
 optimizer_config = torch.optim.SGD(model.classifier.parameters(), lr=lr, weight_decay=lambda_reg, momentum=momentum)
 
