@@ -9,7 +9,7 @@ from torchvision import transforms
 from models import build_MobileNetV3Small, build_MobileNetV2, build_FireNetV2
 import time
 #from firenet import FireNet,build_FireNet
-from firenetV2 import FireNetV2
+#from firenetV2 import FireNetV2
 
 
 ##### CODICE PROFESSORE #####
@@ -25,7 +25,7 @@ args = init_parameter()
 
 
 ### TODO: # Here you should initialize your method
-WEIGHT_PATH = 'FireNetV2_600epoch_10fold_3segment_1frampersegment_batchsize32/fold_1_best_model.pth'
+WEIGHT_PATH = 'ResNet50_exp10_2000epoch_5fold_5segment_1frampersegment_batchsize32/fold_0_best_model.pth'
 MIN_DURATION = 10
 THRESHOLD = 0.5
 
@@ -34,7 +34,7 @@ THRESHOLD = 0.5
 
 
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
-model = build_FireNetV2()
+model = build_ResNet50(1)
 model.load_state_dict(torch.load(WEIGHT_PATH))
 #model = build_FireNet()
 
@@ -94,7 +94,8 @@ for video in os.listdir(args.videos):
                     output = model(input_batch)
                 
                 ###################### 
-                prediction = FireNetV2.compute_output(output[0])
+                #prediction = FireNetV2.compute_output(output[0])
+                prediction= torch.nn.functional.sigmoid(output[0]) 
                 ######################
                 
 
