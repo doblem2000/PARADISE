@@ -3,7 +3,7 @@ FRAMES_unopersecondo/*
 FRAMES_all/*
 FRAMES/*
 results/
-./__pycache__/*
+__pycache__/*
 trash.py
 MobileNetV2_exp1_200epoch_10fold_3segment_1frampersegment_64batchsize/*
 ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32/*
