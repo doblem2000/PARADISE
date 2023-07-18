@@ -24,12 +24,7 @@ def build_MobileNetV2(num_outputs=1):
 def build_FireNetV2():
   model = FireNetV2()
   return model
-    
-# from torchvision import models
-# from torchsummary import summary
-# model = build_MobileNetV3Small()
-# model.eval()
-# summary(model.cuda(), (3, 224, 224))
+
 def build_ResNet50(num_outputs=1):
   model = resnet50(ResNet50_Weights.DEFAULT) # .DEFAULT = best available weights
   model.fc=torch.nn.Linear(in_features=2048,

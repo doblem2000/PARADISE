@@ -8,8 +8,8 @@ from VideoFrameDataset import ImglistOrdictToTensor
 from torchvision import transforms
 from models import *
 import time
-#from firenet import FireNet,build_FireNet
-#from firenetV2 import FireNetV2
+from firenet import *
+from firenetV2 import FireNetV2
 
 
 ##### CODICE PROFESSORE #####
@@ -25,7 +25,7 @@ args = init_parameter()
 
 
 ### TODO: # Here you should initialize your method
-WEIGHT_PATH = 'FireNetV2_600epoch_10fold_3segment_1frampersegment_batchsize32/fold_1_best_model.pth'
+WEIGHT_PATH = 'ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32/fold_0_best_model.pth'
 MIN_DURATION = 10
 THRESHOLD = 0.5
 
@@ -35,7 +35,9 @@ THRESHOLD = 0.5
 
 ### TODO: caricare il modello per il test !!!!!!!!!!!!!!!!!!!!
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = build_FireNetV2()
+model = build_ResNet50(1)
+#model = build_FireNetV2()
+#model = build_MobileNetV3Small(1)
 model.load_state_dict(torch.load(WEIGHT_PATH,map_location=device))
 #model = build_FireNet()
 
@@ -76,20 +78,20 @@ for video in os.listdir(args.videos):
                 ##### PREPROCESSING IMAGES #####
                 #TODO: dai video si estraggono le immagini 
                 #### Firenet
-                transform = albumentations.Compose([
-                    albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
-                    albumentations.Normalize(mean=[0.485, 0.456, 0.406],
-                                            std=[0.229, 0.224, 0.225],
-                                            max_pixel_value=255.,
-                                            always_apply=True),
-                ])
-                # transform = albumentations.Sequential([
-                #     albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
+                # transform = albumentations.Compose([
+                #     albumentations.Resize(height=64, width=64, interpolation=1, always_apply=True),
                 #     albumentations.Normalize(mean=[0.485, 0.456, 0.406],
-                #                  std=[0.229, 0.224, 0.225],
-                #                  max_pixel_value=255.,
-                #                  always_apply=True),
+                #                             std=[0.229, 0.224, 0.225],
+                #                             max_pixel_value=255.,
+                #                             always_apply=True),
                 # ])
+                transform = albumentations.Sequential([
+                    albumentations.Resize(height=224, width=224, interpolation=1, always_apply=True),
+                    albumentations.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225],
+                                 max_pixel_value=255.,
+                                 always_apply=True),
+                ])
                 ################################
                 img = transform(image=img)["image"]
                 
@@ -103,8 +105,8 @@ for video in os.listdir(args.videos):
                     output = model(input_batch)
                 
                 ###################### 
-                prediction = FireNetV2.compute_output(output[0])
-                #prediction = torch.nn.functional.sigmoid(output[0]) 
+                #prediction = FireNetV2.compute_output(output[0])
+                prediction = torch.nn.functional.sigmoid(output[0]) 
                 ######################
                
 
@@ -136,12 +138,12 @@ for video in os.listdir(args.videos):
 
 
     end_time = time.time()
-    ### CODICE PROFESSORE
+
     cap.release()
     f = open(args.results+video+".txt", "w")
-    ### FINE CODICE PROFESSORE 
+ 
 
-    #print("video",video,"num_imgs",num_imgs)
+ 
     ### CODICE AGGIUNTO
     # Here you should add your code for writing the results
     if video_prediction is None and start_frame_fire == 0 and prediction >= THRESHOLD: 
@@ -157,8 +159,6 @@ for video in os.listdir(args.videos):
         t = int(start_frame_fire)
         f.write(str(t))
 
-    #print(torch.cuda.memory_summary(device=None, abbreviated=False))
-    
     total_frames += num_imgs
     total_time += end_time-start_time
     end_time = 0

@@ -51,14 +51,6 @@ for k,g in labels.items():
   print(k + ' ' + str(g))
 
 
-### TOPPA ###
-# toppa_list = ["Video292","Video304","Video281","Video283","Video266","Video297","Video265","Video299","Video296","Video295"]
-# for k in toppa_list:
-#     labels.pop(k)
-
-
-
-
 ####### METRICHE #######
 
 if(len(predictions) != len(labels)):
@@ -150,8 +142,6 @@ else:
   D = sum(d.values())/TP
   Dn = max(0,60-D)/60
 
-# for k,v in delays.items():
-#   print(k + ' ' + str(v))
 
 ####### RESULTS #######
 print('TP: ' + str(TP))
@@ -167,7 +157,7 @@ print("\n\n")
 print('accuracy: ' + str(round(accuracy, 3)))
 print('precision: ' + str(round(P, 3)))
 print('recall: ' + str(round(R, 3)))
-print()
+
 print('average delay: ' + str(round(D, 3)))
 print('normalized average delay: ' + str(round(Dn, 3)))
 

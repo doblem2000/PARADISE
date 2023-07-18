@@ -18,18 +18,18 @@ class FireNetV2(nn.Module):
         self.dropout2 = nn.Dropout(p=0.5) # model.add(Dropout(0.5))
 
         self.Conv2D3 = nn.Conv2d(in_channels = 20, out_channels = 30, kernel_size = 3) # model.add(Conv2D(filters=64, kernel_size=(3, 3), activation='relu'))
-        self.activation3 = nn.Sigmoid()
+        self.activation3 = nn.ReLU()#nn.Sigmoid()
         self.pool3 = nn.AvgPool2d(kernel_size = 2) # model.add(AveragePooling2D())
         self.dropout3 = nn.Dropout(p=0.5) # model.add(Dropout(0.5))
         
         self.flatten = nn.Flatten() # model.add(Flatten())
         
         self.dense4 = nn.Linear(1080, 256) # model.add(Dense(units=256, activation='relu'))
-        self.activation4 = nn.Sigmoid()
+        self.activation4 = nn.ReLU()#nn.Sigmoid()
         self.dropout4 = nn.Dropout(p=0.2) # model.add(Dropout(0.2))
 
         self.dense5 = nn.Linear(256, 128) # model.add(Dense(units=128, activation='relu'))
-        self.activation5 = nn.Sigmoid()
+        self.activation5 = nn.ReLU()#nn.Sigmoid()
 
         self.dense6 = nn.Linear(128, 2) # model.add(Dense(units=2, activation = 'softmax'))
         self.activation6 = nn.Softmax(dim=-1)
@@ -96,7 +96,6 @@ class FireNetV2(nn.Module):
             print("Input shape", x.shape)
         x = self.activation6(x)
         
-
         return x
     
     @staticmethod
