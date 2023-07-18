@@ -6,8 +6,8 @@ labels_dir = './GT/TEST_SET/ALL'
 
 PFR_TARGET = 10
 MEM_TARGET = 4
-TOTAL_FRAMES = 1224
-TOTAL_TIME = 0.31264257431030273
+TOTAL_FRAMES = 1461
+TOTAL_TIME = 0.3857078552246094
 
 ####### LOADING PREDICTIONS #######
 predictions = {}
@@ -158,10 +158,12 @@ print('accuracy: ' + str(round(accuracy, 3)))
 print('precision: ' + str(round(P, 3)))
 print('recall: ' + str(round(R, 3)))
 
+print("R*P: ",round(R*P,3))
+
 print('average delay: ' + str(round(D, 3)))
 print('normalized average delay: ' + str(round(Dn, 3)))
 
 PFR = 1/(TOTAL_TIME/TOTAL_FRAMES)
 
 PFR_delta = max(0,PFR_TARGET/PFR - 1)
-print('PFR_delta: ' + str(round(PFR_delta, 3)))
+print('PFR:',str(round(PFR,3)),"PFR_delta: " + str(round(PFR_delta, 3)))
