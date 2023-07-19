@@ -43,12 +43,12 @@ def create_csv(path,dir,fields,type='train/loss'):
     
 
 if __name__ == '__main__':
-    path = "FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/ignore/events.out.tfevents.1689673499.f695224c4e89.487.0"
+    path = "runs/MobileNetV3Small_exp18_10epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689777887.MICHELE-DELL.3357625.0"
     #print_data(path)
     fields = ['Step', 'Value']
     graph_types = ['train/loss','train/accuracy','val/loss','val/accuracy']
     for graph_type in graph_types:
-        dir = "csv/FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/" + graph_type + "/"
+        dir = "csv/MobileNetV3Small_exp18_10epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/" + graph_type + "/"
         os.makedirs(dir,exist_ok=True)
         train_loss = create_csv(path,dir,fields,graph_type)
     
