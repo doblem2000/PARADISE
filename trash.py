@@ -59,7 +59,7 @@ def print_data(path):
     for e in event_acc.Scalars('train/loss'):
         print(e.step, e.value)
 
-def create_dict(path):
+def create_csv(path,fields):
     event_acc = EventAccumulator(path)
     print(event_acc.Reload())
     print(event_acc.Tags())
@@ -67,29 +67,33 @@ def create_dict(path):
     fold = -1
     #train_loss.update({'fold{fold}':list()})
     for e in event_acc.Scalars('train/loss'):
+        step = e.step
+        value = e.value
         #print(e.step, e.value)
-        if e.step == 0:
+        if step == 0:
             fold += 1
             #print(fold)
-            train_loss["fold" + str(fold)] = list()
+            with open("fold"+str(fold)+".csv", 'w', newline='') as file: 
+                writer = csv.DictWriter(file, fieldnames = fields)
+                writer.writeheader()
+            
+        train_loss[step] = list()
         train_loss['fold' + str(fold)].append(e.value)
     
     return train_loss
 
 
 # field names 
-fields = ['SNo', 'Name', 'Subject'] 
 
-with open('students.csv', 'w', newline='') as file: 
-    writer = csv.DictWriter(file, fieldnames = fields)
 
-    writer.writeheader()
+
 
 
 if __name__ == '__main__':
     path = "FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/ignore/events.out.tfevents.1689673499.f695224c4e89.487.0"
     #print_data(path)
-    train_loss = create_dict(path)
+    fields = ['Step', 'Value'] 
+    train_loss = create_csv(path,fields)
 
     #print(train_loss)
     print(train_loss.keys(),len(train_loss['fold0']),len(train_loss['fold1']),len(train_loss['fold2']))
