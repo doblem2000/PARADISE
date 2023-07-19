@@ -6,8 +6,8 @@ labels_dir = './GT/TEST_SET/ALL'
 
 PFR_TARGET = 10
 MEM_TARGET = 4
-TOTAL_FRAMES = 2352
-TOTAL_TIME = 0.2929575443267822
+TOTAL_FRAMES = 1065
+TOTAL_TIME =  0.15652179718017578
 
 ####### LOADING PREDICTIONS #######
 predictions = {}
@@ -49,14 +49,6 @@ for k,g in predictions.items():
 print('\n\nLABELS\n')
 for k,g in labels.items():
   print(k + ' ' + str(g))
-
-
-### TOPPA ###
-# toppa_list = ["Video292","Video304","Video281","Video283","Video266","Video297","Video265","Video299","Video296","Video295"]
-# for k in toppa_list:
-#     labels.pop(k)
-
-
 
 
 ####### METRICHE #######
@@ -150,8 +142,6 @@ else:
   D = sum(d.values())/TP
   Dn = max(0,60-D)/60
 
-# for k,v in delays.items():
-#   print(k + ' ' + str(v))
 
 ####### RESULTS #######
 print('TP: ' + str(TP))
@@ -167,11 +157,13 @@ print("\n\n")
 print('accuracy: ' + str(round(accuracy, 3)))
 print('precision: ' + str(round(P, 3)))
 print('recall: ' + str(round(R, 3)))
-print()
+
+print("R*P: ",round(R*P,3))
+
 print('average delay: ' + str(round(D, 3)))
 print('normalized average delay: ' + str(round(Dn, 3)))
 
 PFR = 1/(TOTAL_TIME/TOTAL_FRAMES)
 
 PFR_delta = max(0,PFR_TARGET/PFR - 1)
-print('PFR_delta: ' + str(round(PFR_delta, 3)))
+print('PFR:',str(round(PFR,3)),"PFR_delta: " + str(round(PFR_delta, 3)))

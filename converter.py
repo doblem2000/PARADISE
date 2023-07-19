@@ -1,11 +1,11 @@
 import os
 source = "../../Prova/TestSet/Smoke"
 target = "./mp4/"
-#source = "../../Prova/"
-#target = "./result/"
+
+# This script converts all .avi files in source directory to .mp4 using ffmpeg and store them in target directory
+
 print("Current Working Directory ", os.getcwd())
 os.chdir(source)
-
 
 filenames =  [f for f in os.listdir('.') if f.endswith(".avi")]
 
