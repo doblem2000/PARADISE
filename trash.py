@@ -59,11 +59,18 @@ def print_data(path):
     for e in event_acc.Scalars('train/loss'):
         print(e.step, e.value)
 
-def create_csv(path,fields):
+
+def write_csv(dir,fold,headers,data):
+    with open(dir+"fold"+str(fold), 'w') as file:
+        writer = csv.DictWriter(file, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(data)
+
+def create_csv(path,dir,fields):
     event_acc = EventAccumulator(path)
     print(event_acc.Reload())
     print(event_acc.Tags())
-    train_loss = dict()
+    train_loss = list()
     fold = -1
     #train_loss.update({'fold{fold}':list()})
     for e in event_acc.Scalars('train/loss'):
@@ -72,15 +79,12 @@ def create_csv(path,fields):
         #print(e.step, e.value)
         if step == 0:
             fold += 1
-            #print(fold)
-            with open("fold"+str(fold)+".csv", 'w', newline='') as file: 
-                writer = csv.DictWriter(file, fieldnames = fields)
-                writer.writeheader()
+            if fold != 0:
+                write_csv(dir,fold,fields,train_loss)
+                train_loss = list()
             
-        train_loss[step] = list()
-        train_loss['fold' + str(fold)].append(e.value)
+        train_loss.append({fields[0]: step, fields[1]: value})
     
-    return train_loss
 
 
 # field names 
@@ -92,9 +96,11 @@ def create_csv(path,fields):
 if __name__ == '__main__':
     path = "FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/ignore/events.out.tfevents.1689673499.f695224c4e89.487.0"
     #print_data(path)
-    fields = ['Step', 'Value'] 
-    train_loss = create_csv(path,fields)
-
+    fields = ['Step', 'Value']
+    dir = "csv/FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/"
+    os.makedirs(dir,exist_ok=True)
+    train_loss = create_csv(path,dir,fields)
+    
     #print(train_loss)
-    print(train_loss.keys(),len(train_loss['fold0']),len(train_loss['fold1']),len(train_loss['fold2']))
+    #print(train_loss.keys(),len(train_loss['fold0']),len(train_loss['fold1']),len(train_loss['fold2']))
     #to_csv(path)
