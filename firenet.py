@@ -115,15 +115,11 @@ class FireNet(nn.Module):
 
 
 def build_FireNet():
-    trained_model = load_model('Fire-64x64-color-v7-soft.h5')
-    #print(trained_model.summary())
+    trained_model = load_model('/FireNet_v1_PRETRAINED_weights/Fire-64x64-color-v7-soft.h5')
     weights=trained_model.get_weights()
 
     model = FireNet()
-    #print(model)
-    #print("Model loaded, weights:")
-    #print(len(weights))
-    #print(type(weights[0]),len(weights[0]))
+    
 
     model.Conv2D1.weight.data = torch.from_numpy(np.transpose(weights[0]))
     model.Conv2D1.bias.data = torch.from_numpy(weights[1])
@@ -138,37 +134,3 @@ def build_FireNet():
     model.dense6.weight.data = torch.from_numpy(np.transpose(weights[10]))
     model.dense6.bias.data = torch.from_numpy(weights[11])
     return model    
-
-
-
-
-model = build_FireNet()
-
-print(torchinfo.summary(model, ####################################################32 batch size da mettere a run time
-        input_size=(1, 3, 64, 64), # make sure this is "input_size", not "input_shape" (batch_size, color_channels, height, width)
-        verbose=0,
-        col_names=["input_size", "output_size", "num_params", "trainable"],
-        col_width=20,
-        row_settings=["var_names"]
-))
-
-# preprocess = transforms.Compose([
-#     transforms.Resize([64,64]), # Fa la resize delle foto di Alexnet
-#     #transforms.CenterCrop(224),  #Fa il crop delle immagini
-#     transforms.ToTensor(), # Trasformo le immagini di AlexNet in tensori su cui posso lavorare
-#     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-# ])
-
-# input_image = Image.open("./00001.jpg")
-# #display(input_image)
-
-# input_tensor = preprocess(input_image)
-# input_batch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
-# #print(input_batch.shape)
-# with torch.no_grad():
-#   model.eval()
-#   #model.forward(input_batch.cuda(), verbose=True)
-#   o = model(input_batch.cuda())[0]
-#   print(FireNet.compute_output(o))
-#   #pred = output_activation(model(input_batch.cuda())).cpu().numpy().item()
-# # #print(train_dataset.class_to_idx, "\nPrediction:", pred)
