@@ -17,12 +17,13 @@ def print_data(path, type='train/loss'):
 
 
 def write_csv(dir,fold,headers,data):
+    print("Writing fold",fold,"to csv in: ",dir)
     with open(dir+"fold"+str(fold)+".csv", 'w') as file:
         writer = csv.DictWriter(file, fieldnames=headers)
         writer.writeheader()
         writer.writerows(data)
 
-def create_csv(path,dir,fields,type='train/loss',epoch_per_folds=100,steps_per_epoch=9):
+def create_csv(path,dir,fields,type='train/loss',steps_per_epoch=9):
     event_acc = EventAccumulator(path)
     print(event_acc.Reload())
     print(event_acc.Tags())
@@ -45,7 +46,7 @@ def create_csv(path,dir,fields,type='train/loss',epoch_per_folds=100,steps_per_e
                 train_loss.clear()
   
         train_loss.append({fields[0]: step, fields[1]: value})
-        write_csv(dir,fold,fields,train_loss)
+    write_csv(dir,fold+1,fields,train_loss)
     
 
 if __name__ == '__main__':
@@ -58,9 +59,9 @@ if __name__ == '__main__':
     for graph_type in graph_types:
         dir = "csv/small_train/" + graph_type + "/"
         os.makedirs(dir,exist_ok=True)
-        train_loss = create_csv(path,dir,fields,graph_type,epoch_per_folds=100,steps_per_epoch=9)
+        train_loss = create_csv(path,dir,fields,graph_type,steps_per_epoch=9)
     
-    
+
     #print(train_loss)
     #print(train_loss.keys(),len(train_loss['fold0']),len(train_loss['fold1']),len(train_loss['fold2']))
     #to_csv(path)

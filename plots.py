@@ -31,8 +31,8 @@ for experiment in experiments:
             columns = ['Step', 'Value']
             legends = ['train', 'val']
             #print(legends)
-            df_train = pd.read_csv(source + experiment + "/train/" +metric +"/fold"+str(i)+".csv", usecols=columns)
-            df_val = pd.read_csv(source + experiment + "/val/" +metric + "/fold"+str(i)+".csv", usecols=columns)
+            df_train = pd.read_csv(source + experiment + "/train/" +metric +"/fold"+str(i+1)+".csv", usecols=columns)
+            df_val = pd.read_csv(source + experiment + "/val/" +metric + "/fold"+str(i+1)+".csv", usecols=columns)
             #print(df_train==df_val)
             plt.title(experiment + " " + metric + " fold " + str(i))
             ax = df_train.plot(x='Step', y='Value', kind = 'line') #legend=True, label=legends)
@@ -41,7 +41,7 @@ for experiment in experiments:
             path = Path(pathname)
             path.mkdir(parents=True, exist_ok=True)
             plt.legend(legends)
-            plt.savefig(pathname+"fold"+str(i)+".png")
+            plt.savefig(pathname+"fold"+str(i+1)+".png")
             plt.clf()
             plt.close()
 
