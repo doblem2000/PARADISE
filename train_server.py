@@ -14,143 +14,9 @@ os.system('mv GT_TRAINING_SET_CL0 GT/TRAINING_SET/0 ')
 os.system('mv GT_TRAINING_SET_CL1 GT/TRAINING_SET/1 ')
 download_google_file("https://drive.google.com/file/d/1rXMCtpus2i2UDdSBD9RwWAxnT0wrrXOk/view?usp=sharing", "test_code.zip")
 os.system(' unzip test_code.zip')
-os.system(' mv TRAINING_SET TEMP_VIDEO')
-os.system(' mv GT TEMP_GT')
-os.system('rm -R TRAINING_SET ')
-os.system('rm -R TEST_SET ')
-os.system(' rm -R GT')
-
-
-# List all files in dir
-files_1 = os.listdir("TEMP_VIDEO/1")  # Video con fuoco
-files_0 = os.listdir("TEMP_VIDEO/0")  # Video senza fuoco
-# print(files_0)
-
-# Select p_train(in %) of the files randomly
-p_train=0.8
-random_files_1 = np.random.choice(files_1, size=int(len(files_1)*p_train), replace=False)
-random_files_0 = np.random.choice(files_0, size=int(len(files_0)*p_train), replace=False)
-
-# Get the remaining files
-other_files_1 = [x for x in files_1 if x not in random_files_1]
-other_files_0 = [x for x in files_0 if x not in random_files_0]
-
-# Creo le cartelle
-# Per i video
-os.mkdir("TRAINING_SET")
-os.mkdir("TRAINING_SET/1")
-os.mkdir("TRAINING_SET/0")
-os.mkdir("TEST_SET")
-os.mkdir("TEST_SET/1")
-os.mkdir("TEST_SET/0")
-# Per le label
-os.mkdir("GT")
-os.mkdir("GT/TRAINING_SET")
-os.mkdir("GT/TRAINING_SET/1")
-os.mkdir("GT/TRAINING_SET/0")
-os.mkdir("GT/TEST_SET")
-os.mkdir("GT/TEST_SET/1")
-os.mkdir("GT/TEST_SET/0")
-
-label_0_train=list()
-label_1_train=list()
-label_0_val=list()
-label_1_val=list()
-
-# Creo il training set
-for x in random_files_0:
-    source="TEMP_VIDEO/0/"+x
-    dest="TRAINING_SET/0/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-    label=x.replace("mp4","rtf")
-    label_0_train.append(label)
-
-#print(label_0_list)
-
-for x in random_files_1:
-    source="TEMP_VIDEO/1/"+x
-    dest="TRAINING_SET/1/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-    label=x.replace("mp4","rtf")
-    label_1_train.append(label)
-
-#print(label_1_list)
-
-# Creo il validation set
-for x in other_files_0:
-    source="TEMP_VIDEO/0/"+x
-    dest="TEST_SET/0/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-    label=x.replace("mp4","rtf")
-    label_0_val.append(label)
-
-for x in other_files_1:
-    source="TEMP_VIDEO/1/"+x
-    dest="TEST_SET/1/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-    label=x.replace("mp4","rtf")
-    label_1_val.append(label)
-
-# Ora suddivido le label
-for x in label_0_train:
-    source="TEMP_GT/TRAINING_SET/0/"+x
-    dest="GT/TRAINING_SET/0/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-
-for x in label_1_train:
-    source="TEMP_GT/TRAINING_SET/1/"+x
-    dest="GT/TRAINING_SET/1/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-
-for x in label_0_val:
-    source="TEMP_GT/TRAINING_SET/0/"+x
-    dest="GT/TEST_SET/0/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-
-for x in label_1_val:
-    source="TEMP_GT/TRAINING_SET/1/"+x
-    dest="GT/TEST_SET/1/"+x
-    command="cp "+source+" "+dest
-    os.system(command)
-
-# !cat GT/TRAINING_SET/0/Video0.rtf
-
-print("Video:")
-os.system('ls TEMP_VIDEO/1 | wc -l ')
-os.system(' ls TEMP_VIDEO/0 | wc -l')
-
-
-print("\nLabel:")
-os.system('ls TEMP_GT/TRAINING_SET/1 | wc -l ')
-os.system('ls TEMP_GT/TRAINING_SET/0 | wc -l ')
-
-print("\nVideo train set:")
-os.system('ls TRAINING_SET/1 | wc -l ')
-os.system(' ls TRAINING_SET/0 | wc -l')
-
-print("\nVideo test set:")
-os.system(' ls TEST_SET/1 | wc -l')
-os.system(' ls TEST_SET/0 | wc -l')
-
-print("\nLabel train set:")
-os.system(' ls GT/TRAINING_SET/1 | wc -l')
-os.system(' ls GT/TRAINING_SET/0 | wc -l')
-
-print("\nLabel test set:")
-os.system('ls GT/TEST_SET/1 | wc -l ')
-os.system('ls GT/TEST_SET/0 | wc -l ')
-
 
 videos_path = "TRAINING_SET"
 frames_path = "FRAMES"
-
 
 os.system('rm -R FRAMES/TRAINING_SET/ ')
 
@@ -181,7 +47,7 @@ for video in tqdm.tqdm(file_list): # Se ho già caricato i frame di questi video
   os.makedirs(os.path.join(frames_path, video))
   #extract_frames(video)    # Invece di chiamare la funzione di prima che è lenta utilizzo questa di sotto che è molto più veloce.
   #estre tutti i frame
-  os.system("ffmpeg -i {} {}/{}/$Frame{}.jpg".format(video, frames_path, video, "%05d"))
+  os.system("ffmpeg -i {} -r 1/1 {}/{}/$Frame{}.jpg".format(video, frames_path, video, "%05d"))
   
 
 os.system('pip install striprtf ')

@@ -9,3 +9,5 @@ ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32/*
 FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/ignore/*
 ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32/*
 csv/*
+plots/*
+summary/*
