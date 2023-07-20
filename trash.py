@@ -60,6 +60,7 @@ if __name__ == '__main__':
         os.makedirs(dir,exist_ok=True)
         train_loss = create_csv(path,dir,fields,graph_type,epoch_per_folds=100,steps_per_epoch=9)
     
+    
     #print(train_loss)
     #print(train_loss.keys(),len(train_loss['fold0']),len(train_loss['fold1']),len(train_loss['fold2']))
     #to_csv(path)
