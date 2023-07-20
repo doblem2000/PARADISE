@@ -2,10 +2,10 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from pathlib import Path
 import os
-source = "csv/"
-target = "plots/"
+source = "csv_16_batch/"
+target = "plots_16_batch/"
 
-steps_per_epoch = 9
+steps_per_epoch = 18
 ### create target directory if it doesn't exist ###
 os.makedirs(target,exist_ok=True)
 

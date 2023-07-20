@@ -3,7 +3,7 @@ import csv
 import pandas as pd
 from pathlib import Path
 
-source = "csv/"
+source = "csv_16_batch/"
 target = "summary/"
 
 header = ['Fold', 'Training Loss', 'Training Accuracy', 'Validation Loss', 'Validation Accuracy']
