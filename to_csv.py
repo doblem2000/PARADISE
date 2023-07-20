@@ -24,13 +24,9 @@ def write_csv(dir,fold,headers,data):
         writer.writerows(data)
 
 if __name__ == '__main__':
-    steps_per_epoch=9
-    experiments=["MobileNetV3Small_exp14_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD",
-                "ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD",
-                "ResNet18_exp17_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD"]
-    paths = ["runs/MobileNetV3Small_exp14_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689690865.MICHELE-DELL.178023.0",
-            "runs/ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689689667.6f949c9a8046.2006388.0",
-            "runs/ResNet18_exp17_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689699687.MICHELE-DELL.294463.0"]
+    steps_per_epoch=18
+    experiments=["MobileNetV3Small_exp21_1000epoch_10fold_3segment_1frampersegment_batchsize16_optSGD"]
+    paths = ["runs/MobileNetV3Small_exp21_1000epoch_10fold_3segment_1frampersegment_batchsize16_optSGD/events.out.tfevents.1689794694.carthago.408883.0"]
     #print_data(paths)
     fields = ['Step', 'Value']
     graph_types = ['train/loss', 'train/acc', 'val/loss', 'val/acc']
