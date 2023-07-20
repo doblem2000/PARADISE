@@ -25,35 +25,35 @@ def write_csv(dir,fold,headers,data):
 
 if __name__ == '__main__':
     steps_per_epoch=9
-    experiment=["MobileNetV3Small_exp14_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD",
-                "ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD",
-                "ResNet18_exp17_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD"]
-    path = ["runs/MobileNetV3Small_exp14_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689690865.MICHELE-DELL.178023.0",
-            "runs/ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689689667.6f949c9a8046.2006388.0",
-            "runs/ResNet18_exp17_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689699687.MICHELE-DELL.294463.0"]
-    #print_data(path)
+    #experiments=["MobileNetV3Small_exp14_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD",
+    #            "ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD",
+    #            "ResNet18_exp17_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD"]
+    #paths = ["runs/MobileNetV3Small_exp14_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689690865.MICHELE-DELL.178023.0",
+    #        "runs/ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689689667.6f949c9a8046.2006388.0",
+    #        "runs/ResNet18_exp17_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689699687.MICHELE-DELL.294463.0"]
+    #print_data(paths)
+    experiments = ["small_train","firenetV2"]
+    paths = ["./events.out.tfevents.1689777887.MICHELE-DELL.3357625.0","FireNetV2_6-9/events.out.tfevents.1689842402.cfd9beb1e39e.764.0"]
     fields = ['Step', 'Value']
     graph_types = ['train/loss', 'train/acc', 'val/loss', 'val/acc']
+
     
-    event_acc = EventAccumulator(path)
-    print(event_acc.Reload())
-    print(event_acc.Tags())
-    
-    
-    
-    for i in range(len(path)):
+    for i in range(len(paths)):
+        event_acc = EventAccumulator(paths[i])
+        print(event_acc.Reload())
+        print(event_acc.Tags())
         for graph_type in graph_types:
-            dir = "csv/"+ experiment[i] +"/"+ graph_type + "/"
+            dir = "csv/"+ experiments[i] +"/"+ graph_type + "/"
             os.makedirs(dir,exist_ok=True)
-            #train_loss = create_csv(path[i],dir,fields,graph_type,steps_per_epoch=9)
+            #train_loss = create_csv(paths[i],dir,fields,graph_type,steps_per_epoch=9)
             flag = False
             train_loss = list()
             fold = -1
-            if type == 'val/loss' or type == 'val/acc':
+            if graph_type == 'val/loss' or graph_type == 'val/acc':
                 #print(type)
                 flag = True
             
-            for e in event_acc.Scalars(type):
+            for e in event_acc.Scalars(graph_type):
                 step = e.step
                 value = e.value
                 # if flag:
