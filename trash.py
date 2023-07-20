@@ -50,7 +50,7 @@ def create_csv(path,dir,fields,type='train/loss',steps_per_epoch=9):
     
 
 if __name__ == '__main__':
-    path = "events.out.tfevents.1689777887.MICHELE-DELL.3357625.0"
+    path = "runs/MobileNetV2_exp20_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689807189.MICHELE-DELL.472.0"
     #print_data(path)
     fields = ['Step', 'Value']
     graph_types = ['train/loss', 'train/acc', 'val/loss', 'val/acc']
