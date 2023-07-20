@@ -50,14 +50,14 @@ def create_csv(path,dir,fields,type='train/loss',steps_per_epoch=9):
     
 
 if __name__ == '__main__':
-    path = "runs/MobileNetV2_exp20_1000epoch_10fold_3segment_1frampersegment_batchsize32_optSGD/events.out.tfevents.1689807189.MICHELE-DELL.472.0"
+    path = "FireNetV2_3-5/events.out.tfevents.1689842591.a6ec56505302.399.0"
     #print_data(path)
     fields = ['Step', 'Value']
     graph_types = ['train/loss', 'train/acc', 'val/loss', 'val/acc']
     #print_data(path,graph_types[2])
     #print_data(path,graph_types[3])
     for graph_type in graph_types:
-        dir = "csv/small_train/" + graph_type + "/"
+        dir = "csv_firenet/3-5/" + graph_type + "/"
         os.makedirs(dir,exist_ok=True)
         train_loss = create_csv(path,dir,fields,graph_type,steps_per_epoch=9)
     
