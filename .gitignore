@@ -8,7 +8,3 @@ MobileNetV2_exp1_200epoch_10fold_3segment_1frampersegment_64batchsize/*
 ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32/*
 FireNetV2_400epoch_10fold_3segment_1frampersegment_batchsize32/ignore/*
 ResNet50_exp13_1000epoch_10fold_3segment_1frampersegment_batchsize32/*
-events.out.tfevents.1689777887.MICHELE-DELL.3357625.0
-FireNetV2_0-2/*
-FireNetV2_3-5/*
-FireNetV2_6-9/*
