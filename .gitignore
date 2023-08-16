@@ -1,5 +1,6 @@
-runs/*
 FRAMES_unopersecondo/*
 FRAMES_all/*
 FRAMES/*
 __pycache__/*
+.gitignore
+.git/*
